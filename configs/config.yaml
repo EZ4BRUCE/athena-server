@@ -1,0 +1,16 @@
+RPC:
+  Port: 8000
+Email:
+  Host: smtp.qq.com
+  Port: 465
+  UserName: 1m
+  Password: 11
+  IsSSL: true
+  From: 122786302@qq.com
+  To:
+    - lhy122786302@gmail.com
+Database:
+  DBType: mongodb
+  Host: 127.0.0.1:27018
+  DBName: athena-server
+
