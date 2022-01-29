@@ -49,7 +49,12 @@ func setupSetting() error {
 		return err
 	}
 
-	err = setting.ReadSection("Database", &global.DatabaseSetting)
+	err = setting.ReadSection("ReportDB", &global.ReportDBSetting)
+	if err != nil {
+		return err
+	}
+
+	err = setting.ReadSection("RuleDB", &global.RuleDBSetting)
 	if err != nil {
 		return err
 	}
@@ -64,9 +69,15 @@ func setupSetting() error {
 
 func setupDBEngine() error {
 	var err error
-	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	global.ReportDBEngine, err = model.NewReportDBEngine(global.ReportDBSetting)
 	if err != nil {
 		return err
 	}
+
+	global.RuleDBEngine, err = model.NewRuleDBEngine(global.RuleDBSetting)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -1,7 +1,11 @@
 package global
 
-import "go.mongodb.org/mongo-driver/mongo"
+import (
+	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
+)
 
 var (
-	DBEngine *mongo.Database
+	ReportDBEngine *mongo.Database
+	RuleDBEngine   *gorm.DB
 )

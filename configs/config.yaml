@@ -9,8 +9,18 @@ Email:
   From: 122786302@qq.com
   To:
     - lhy122786302@gmail.com
-Database:
+ReportDB:
   DBType: mongodb
   Host: 127.0.0.1:27018
   DBName: athena-server
+RuleDB:
+  DBType: mysql
+  Username: root
+  Password: 123456
+  Host: 127.0.0.1:3307
+  DBName: rule-server
+  Charset: utf8mb4
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
 
