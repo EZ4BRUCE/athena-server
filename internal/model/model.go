@@ -30,7 +30,7 @@ func NewReportDBEngine(reportDBSetting *setting.ReportDBSettingS) (*mongo.Databa
 		log.Fatal(err)
 		return nil, err
 	}
-	return client.Database(global.ReportDBSetting.DBName), nil
+	return client.Database(reportDBSetting.DBName), nil
 
 }
 
