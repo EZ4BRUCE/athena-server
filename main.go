@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net"
 
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
+	"github.com/EZ4BRUCE/athena-server/internal/service"
 	"github.com/EZ4BRUCE/athena-server/pkg/setting"
 	pb "github.com/EZ4BRUCE/athena-server/proto"
 	"github.com/EZ4BRUCE/athena-server/server"
@@ -26,11 +29,11 @@ func init() {
 
 func main() {
 
-	// svc := service.NewRuleService(context.Background())
-	// results, _ := svc.SearchAggregators("cpu_rate")
-	// for _, result := range results {
-	// 	fmt.Println(result)
-	// }
+	svc := service.NewRuleService(context.Background())
+	results, _ := svc.SearchAggregators("cpu_rate")
+	for _, result := range results {
+		fmt.Println(result)
+	}
 	s := grpc.NewServer()
 	pb.RegisterReportServerServer(s, server.NewReportServer())
 

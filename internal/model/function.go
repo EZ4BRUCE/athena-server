@@ -4,10 +4,10 @@ import "gorm.io/gorm"
 
 // 在athena的service层要有个判断是否满足的方法
 type Function struct {
-	Id          uint32  `gorm:"primaryKey;column:id" json:"id"`
-	Type        string  `gorm:"column:type" json:"type"`
-	Threshold   float64 `gorm:"column:threshold" json:"threshold"`
-	Description string  `gorm:"description" json:"description"`
+	Id          uint32  `gorm:"primaryKey;column:id" bson:"id"`
+	Type        string  `gorm:"column:type" bson:"type"`
+	Threshold   float64 `gorm:"column:threshold" bson:"threshold"`
+	Description string  `gorm:"description" bson:"description"`
 }
 
 func (f Function) Create(db *gorm.DB) error {

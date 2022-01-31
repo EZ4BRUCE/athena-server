@@ -9,6 +9,7 @@ import (
 )
 
 type Report struct {
+	UId        string            `bson:"uId"`
 	Timestamp  int64             `bson:"timestamp"`
 	Metric     string            `bson:"metric"`
 	Dimensions map[string]string `bson:"dimensions"`

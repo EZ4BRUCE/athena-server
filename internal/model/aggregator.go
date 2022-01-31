@@ -5,11 +5,11 @@ import "gorm.io/gorm"
 // 聚合函数和告警规则分来存，保证扩展性
 // Name要unique
 type Aggregator struct {
-	Id         uint32 `gorm:"primaryKey;column:id" json:"id"`
-	Name       string `gorm:"column:name" json:"name"`
-	Metric     string `gorm:"column:metric" json:"metric"`
-	FunctionId uint32 `gorm:"column:function_id" json:"function_id"`
-	RuleId     uint32 `gorm:"column:rule_id" json:"rule_id"`
+	Id         uint32 `gorm:"primaryKey;column:id" bson:"id"`
+	Name       string `gorm:"column:name" bson:"name"`
+	Metric     string `gorm:"column:metric" bson:"metric"`
+	FunctionId uint32 `gorm:"column:function_id" bson:"function_id"`
+	RuleId     uint32 `gorm:"column:rule_id" bson:"rule_id"`
 }
 
 func (a Aggregator) Create(db *gorm.DB) error {

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        v3.19.3
-// source: athena.proto
+// source: proto/athena.proto
 
 package proto
 
@@ -24,26 +24,153 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 上报参数
-type ReportReq struct {
+// 注册参数
+type RegisterReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	// unix时间戳，单位s
 	Timestamp int64 `protobuf:"varint,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	// 描述
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+}
+
+func (x *RegisterReq) Reset() {
+	*x = RegisterReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_athena_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RegisterReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterReq) ProtoMessage() {}
+
+func (x *RegisterReq) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_athena_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterReq.ProtoReflect.Descriptor instead.
+func (*RegisterReq) Descriptor() ([]byte, []int) {
+	return file_proto_athena_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *RegisterReq) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *RegisterReq) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+// 注册成功后返回的参数
+type RegisterRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 返回码
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	// 注册后授予的id，用于标识每一个agent
+	UId string `protobuf:"bytes,2,opt,name=UId,proto3" json:"UId,omitempty"`
+	// 返回信息
+	Msg string `protobuf:"bytes,3,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *RegisterRsp) Reset() {
+	*x = RegisterRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_athena_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RegisterRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterRsp) ProtoMessage() {}
+
+func (x *RegisterRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_athena_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterRsp.ProtoReflect.Descriptor instead.
+func (*RegisterRsp) Descriptor() ([]byte, []int) {
+	return file_proto_athena_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *RegisterRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *RegisterRsp) GetUId() string {
+	if x != nil {
+		return x.UId
+	}
+	return ""
+}
+
+func (x *RegisterRsp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+// 上报参数
+type ReportReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 注册后授予的id，用于标识每一个agent
+	UId string `protobuf:"bytes,1,opt,name=UId,proto3" json:"UId,omitempty"`
+	// unix时间戳，单位s
+	Timestamp int64 `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	// 指标
-	Metric string `protobuf:"bytes,2,opt,name=metric,proto3" json:"metric,omitempty"`
+	Metric string `protobuf:"bytes,3,opt,name=metric,proto3" json:"metric,omitempty"`
 	// 维度
-	Dimensions map[string]string `protobuf:"bytes,3,rep,name=dimensions,proto3" json:"dimensions,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Dimensions map[string]string `protobuf:"bytes,4,rep,name=dimensions,proto3" json:"dimensions,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// 上报值
-	Value float64 `protobuf:"fixed64,4,opt,name=value,proto3" json:"value,omitempty"`
+	Value float64 `protobuf:"fixed64,5,opt,name=value,proto3" json:"value,omitempty"`
 }
 
 func (x *ReportReq) Reset() {
 	*x = ReportReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_athena_proto_msgTypes[0]
+		mi := &file_proto_athena_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -56,7 +183,7 @@ func (x *ReportReq) String() string {
 func (*ReportReq) ProtoMessage() {}
 
 func (x *ReportReq) ProtoReflect() protoreflect.Message {
-	mi := &file_athena_proto_msgTypes[0]
+	mi := &file_proto_athena_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -69,7 +196,14 @@ func (x *ReportReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportReq.ProtoReflect.Descriptor instead.
 func (*ReportReq) Descriptor() ([]byte, []int) {
-	return file_athena_proto_rawDescGZIP(), []int{0}
+	return file_proto_athena_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ReportReq) GetUId() string {
+	if x != nil {
+		return x.UId
+	}
+	return ""
 }
 
 func (x *ReportReq) GetTimestamp() int64 {
@@ -115,7 +249,7 @@ type ReportRsp struct {
 func (x *ReportRsp) Reset() {
 	*x = ReportRsp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_athena_proto_msgTypes[1]
+		mi := &file_proto_athena_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -128,7 +262,7 @@ func (x *ReportRsp) String() string {
 func (*ReportRsp) ProtoMessage() {}
 
 func (x *ReportRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_athena_proto_msgTypes[1]
+	mi := &file_proto_athena_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -141,7 +275,7 @@ func (x *ReportRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportRsp.ProtoReflect.Descriptor instead.
 func (*ReportRsp) Descriptor() ([]byte, []int) {
-	return file_athena_proto_rawDescGZIP(), []int{1}
+	return file_proto_athena_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ReportRsp) GetCode() int32 {
@@ -158,71 +292,114 @@ func (x *ReportRsp) GetMsg() string {
 	return ""
 }
 
-var File_athena_proto protoreflect.FileDescriptor
+var File_proto_athena_proto protoreflect.FileDescriptor
 
-var file_athena_proto_rawDesc = []byte{
-	0x0a, 0x0c, 0x61, 0x74, 0x68, 0x65, 0x6e, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06,
-	0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x22, 0xd9, 0x01, 0x0a, 0x09, 0x52, 0x65, 0x70, 0x6f, 0x72,
-	0x74, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
-	0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
-	0x6d, 0x70, 0x12, 0x16, 0x0a, 0x06, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x06, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x12, 0x41, 0x0a, 0x0a, 0x64, 0x69,
-	0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21,
-	0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65,
-	0x71, 0x2e, 0x44, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x45, 0x6e, 0x74, 0x72,
-	0x79, 0x52, 0x0a, 0x64, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x14, 0x0a,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x1a, 0x3d, 0x0a, 0x0f, 0x44, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e,
-	0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02,
-	0x38, 0x01, 0x22, 0x31, 0x0a, 0x09, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x73, 0x70, 0x12,
-	0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63,
-	0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x03, 0x6d, 0x73, 0x67, 0x32, 0x40, 0x0a, 0x0c, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x53,
-	0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x30, 0x0a, 0x06, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x12,
-	0x11, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52,
-	0x65, 0x71, 0x1a, 0x11, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x70, 0x6f,
-	0x72, 0x74, 0x52, 0x73, 0x70, 0x22, 0x00, 0x42, 0x0a, 0x5a, 0x08, 0x2e, 0x2f, 0x3b, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_proto_athena_proto_rawDesc = []byte{
+	0x0a, 0x12, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x61, 0x74, 0x68, 0x65, 0x6e, 0x61, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x4d, 0x0a, 0x0b,
+	0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x12, 0x1c, 0x0a, 0x09, 0x74,
+	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09,
+	0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x45, 0x0a, 0x0b, 0x52,
+	0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10,
+	0x0a, 0x03, 0x55, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x55, 0x49, 0x64,
+	0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d,
+	0x73, 0x67, 0x22, 0xeb, 0x01, 0x0a, 0x09, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71,
+	0x12, 0x10, 0x0a, 0x03, 0x55, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x55,
+	0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70,
+	0x12, 0x16, 0x0a, 0x06, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x12, 0x41, 0x0a, 0x0a, 0x64, 0x69, 0x6d, 0x65,
+	0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x72,
+	0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x2e,
+	0x44, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52,
+	0x0a, 0x64, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x1a, 0x3d, 0x0a, 0x0f, 0x44, 0x69, 0x6d, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01,
+	0x22, 0x31, 0x0a, 0x09, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x73, 0x70, 0x12, 0x12, 0x0a,
+	0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x64,
+	0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03,
+	0x6d, 0x73, 0x67, 0x32, 0x78, 0x0a, 0x0c, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x53, 0x65, 0x72,
+	0x76, 0x65, 0x72, 0x12, 0x36, 0x0a, 0x08, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12,
+	0x13, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65,
+	0x72, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65,
+	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x73, 0x70, 0x22, 0x00, 0x12, 0x30, 0x0a, 0x06, 0x52,
+	0x65, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x11, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52,
+	0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x72, 0x65, 0x70, 0x6f, 0x72,
+	0x74, 0x2e, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x73, 0x70, 0x22, 0x00, 0x42, 0x0a, 0x5a,
+	0x08, 0x2e, 0x2f, 0x3b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
-	file_athena_proto_rawDescOnce sync.Once
-	file_athena_proto_rawDescData = file_athena_proto_rawDesc
+	file_proto_athena_proto_rawDescOnce sync.Once
+	file_proto_athena_proto_rawDescData = file_proto_athena_proto_rawDesc
 )
 
-func file_athena_proto_rawDescGZIP() []byte {
-	file_athena_proto_rawDescOnce.Do(func() {
-		file_athena_proto_rawDescData = protoimpl.X.CompressGZIP(file_athena_proto_rawDescData)
+func file_proto_athena_proto_rawDescGZIP() []byte {
+	file_proto_athena_proto_rawDescOnce.Do(func() {
+		file_proto_athena_proto_rawDescData = protoimpl.X.CompressGZIP(file_proto_athena_proto_rawDescData)
 	})
-	return file_athena_proto_rawDescData
+	return file_proto_athena_proto_rawDescData
 }
 
-var file_athena_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_athena_proto_goTypes = []interface{}{
-	(*ReportReq)(nil), // 0: report.ReportReq
-	(*ReportRsp)(nil), // 1: report.ReportRsp
-	nil,               // 2: report.ReportReq.DimensionsEntry
+var file_proto_athena_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_athena_proto_goTypes = []interface{}{
+	(*RegisterReq)(nil), // 0: report.RegisterReq
+	(*RegisterRsp)(nil), // 1: report.RegisterRsp
+	(*ReportReq)(nil),   // 2: report.ReportReq
+	(*ReportRsp)(nil),   // 3: report.ReportRsp
+	nil,                 // 4: report.ReportReq.DimensionsEntry
 }
-var file_athena_proto_depIdxs = []int32{
-	2, // 0: report.ReportReq.dimensions:type_name -> report.ReportReq.DimensionsEntry
-	0, // 1: report.ReportServer.Report:input_type -> report.ReportReq
-	1, // 2: report.ReportServer.Report:output_type -> report.ReportRsp
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+var file_proto_athena_proto_depIdxs = []int32{
+	4, // 0: report.ReportReq.dimensions:type_name -> report.ReportReq.DimensionsEntry
+	0, // 1: report.ReportServer.Register:input_type -> report.RegisterReq
+	2, // 2: report.ReportServer.Report:input_type -> report.ReportReq
+	1, // 3: report.ReportServer.Register:output_type -> report.RegisterRsp
+	3, // 4: report.ReportServer.Report:output_type -> report.ReportRsp
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_athena_proto_init() }
-func file_athena_proto_init() {
-	if File_athena_proto != nil {
+func init() { file_proto_athena_proto_init() }
+func file_proto_athena_proto_init() {
+	if File_proto_athena_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_athena_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_athena_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RegisterReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_athena_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RegisterRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_athena_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ReportReq); i {
 			case 0:
 				return &v.state
@@ -234,7 +411,7 @@ func file_athena_proto_init() {
 				return nil
 			}
 		}
-		file_athena_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_proto_athena_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ReportRsp); i {
 			case 0:
 				return &v.state
@@ -251,20 +428,20 @@ func file_athena_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_athena_proto_rawDesc,
+			RawDescriptor: file_proto_athena_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_athena_proto_goTypes,
-		DependencyIndexes: file_athena_proto_depIdxs,
-		MessageInfos:      file_athena_proto_msgTypes,
+		GoTypes:           file_proto_athena_proto_goTypes,
+		DependencyIndexes: file_proto_athena_proto_depIdxs,
+		MessageInfos:      file_proto_athena_proto_msgTypes,
 	}.Build()
-	File_athena_proto = out.File
-	file_athena_proto_rawDesc = nil
-	file_athena_proto_goTypes = nil
-	file_athena_proto_depIdxs = nil
+	File_proto_athena_proto = out.File
+	file_proto_athena_proto_rawDesc = nil
+	file_proto_athena_proto_goTypes = nil
+	file_proto_athena_proto_depIdxs = nil
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -279,6 +456,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ReportServerClient interface {
+	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterRsp, error)
 	// ReportServer
 	Report(ctx context.Context, in *ReportReq, opts ...grpc.CallOption) (*ReportRsp, error)
 }
@@ -289,6 +467,15 @@ type reportServerClient struct {
 
 func NewReportServerClient(cc grpc.ClientConnInterface) ReportServerClient {
 	return &reportServerClient{cc}
+}
+
+func (c *reportServerClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterRsp, error) {
+	out := new(RegisterRsp)
+	err := c.cc.Invoke(ctx, "/report.ReportServer/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *reportServerClient) Report(ctx context.Context, in *ReportReq, opts ...grpc.CallOption) (*ReportRsp, error) {
@@ -302,6 +489,7 @@ func (c *reportServerClient) Report(ctx context.Context, in *ReportReq, opts ...
 
 // ReportServerServer is the server API for ReportServer service.
 type ReportServerServer interface {
+	Register(context.Context, *RegisterReq) (*RegisterRsp, error)
 	// ReportServer
 	Report(context.Context, *ReportReq) (*ReportRsp, error)
 }
@@ -310,12 +498,33 @@ type ReportServerServer interface {
 type UnimplementedReportServerServer struct {
 }
 
+func (*UnimplementedReportServerServer) Register(context.Context, *RegisterReq) (*RegisterRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
 func (*UnimplementedReportServerServer) Report(context.Context, *ReportReq) (*ReportRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Report not implemented")
 }
 
 func RegisterReportServerServer(s *grpc.Server, srv ReportServerServer) {
 	s.RegisterService(&_ReportServer_serviceDesc, srv)
+}
+
+func _ReportServer_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReportServerServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/report.ReportServer/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReportServerServer).Register(ctx, req.(*RegisterReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ReportServer_Report_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -341,10 +550,14 @@ var _ReportServer_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*ReportServerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Register",
+			Handler:    _ReportServer_Register_Handler,
+		},
+		{
 			MethodName: "Report",
 			Handler:    _ReportServer_Report_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "athena.proto",
+	Metadata: "proto/athena.proto",
 }

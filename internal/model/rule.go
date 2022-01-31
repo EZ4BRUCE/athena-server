@@ -5,10 +5,10 @@ import "gorm.io/gorm"
 // 聚合函数和告警规则分来存，保证扩展性
 // 蕴蓄同一个等级不同行为（描述不同），id区分
 type Rule struct {
-	Id          uint32 `gorm:"primaryKey;column:id" json:"id"`
-	Level       string `gorm:"level" json:"level"`
-	Action      string `gorm:"action" json:"action"`
-	Description string `gorm:"description" json:"description"`
+	Id          uint32 `gorm:"primaryKey;column:id" bson:"id"`
+	Level       string `gorm:"level" bson:"level"`
+	Action      string `gorm:"action" bson:"action"`
+	Description string `gorm:"description" bson:"description"`
 }
 
 func (r Rule) Create(db *gorm.DB) error {
