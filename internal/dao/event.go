@@ -8,7 +8,7 @@ func (d ReportDao) CreateNormalEvent(reports []model.Report) error {
 	return normalEvent.Create(d.engine)
 }
 
-func (d ReportDao) CreateWarningEvent(reports []model.Report, aggregatorId uint32, aggregatorName, metric string, function model.Function, rule model.Rule) error {
-	warningEvent := model.WarningEvent{Reports: reports, AggregatorId: aggregatorId, AggregatorName: aggregatorName, Metric: metric, Function: function, Rule: rule}
+func (d ReportDao) CreateWarningEvent(reports []model.Report, aggregatorId uint32, aggregatorName, metric string, function model.Function, rule model.Rule, aggregateValue float64) error {
+	warningEvent := model.WarningEvent{Reports: reports, AggregatorId: aggregatorId, AggregatorName: aggregatorName, Metric: metric, Function: function, Rule: rule, AggregateValue: aggregateValue}
 	return warningEvent.Create(d.engine)
 }

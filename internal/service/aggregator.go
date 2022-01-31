@@ -13,7 +13,6 @@ type Aggregator struct {
 
 // 取出数据库的规则等信息，返回该指标对应的所有聚合器
 func (svc *RuleService) SearchAggregators(metric string) ([]Aggregator, error) {
-
 	all, err := svc.dao.SearchAggregators(metric)
 	if err != nil {
 		return nil, err

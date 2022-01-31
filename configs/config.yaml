@@ -1,5 +1,7 @@
 RPC:
   Port: 8000
+  # 聚合时间
+  AggregationTime: 5
 Email:
   Host: smtp.qq.com
   Port: 465

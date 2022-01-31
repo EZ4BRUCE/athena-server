@@ -1,7 +1,8 @@
 package setting
 
 type RPCSettingS struct {
-	Port string
+	Port            string
+	AggregationTime int
 }
 
 type ReportDBSettingS struct {

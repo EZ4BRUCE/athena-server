@@ -21,6 +21,7 @@ type WarningEvent struct {
 	Metric         string   `bson:"metric"`
 	Function       Function `bson:"function"`
 	Rule           Rule     `bson:"rule"`
+	AggregateValue float64  `bson:"aggregate_value"`
 }
 
 func (n NormalEvent) Create(db *mongo.Database) error {

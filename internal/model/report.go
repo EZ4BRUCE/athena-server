@@ -24,7 +24,7 @@ func (r Report) Create(db *mongo.Database) error {
 		return err
 	}
 	id := result.InsertedID.(primitive.ObjectID)
-	fmt.Println("Auto Increasing ID:", id.Hex())
+	id.Hex()
 	return nil
 
 }
