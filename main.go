@@ -25,6 +25,12 @@ func init() {
 }
 
 func main() {
+
+	// svc := service.NewRuleService(context.Background())
+	// results, _ := svc.SearchAggregators("cpu_rate")
+	// for _, result := range results {
+	// 	fmt.Println(result)
+	// }
 	s := grpc.NewServer()
 	pb.RegisterReportServerServer(s, server.NewReportServer())
 
