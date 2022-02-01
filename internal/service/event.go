@@ -1,8 +1,8 @@
 package service
 
 import (
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
-	pb "github.com/EZ4BRUCE/athena-server/proto"
 )
 
 // Service的方法，svc作为接收者

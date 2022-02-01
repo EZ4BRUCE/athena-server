@@ -3,6 +3,7 @@ module github.com/EZ4BRUCE/athena-server
 go 1.17
 
 require (
+	github.com/EZ4BRUCE/athena-proto v0.0.0-20220201030813-78664fa77730
 	github.com/google/uuid v1.1.2
 	github.com/spf13/viper v1.10.1
 	go.mongodb.org/mongo-driver v1.8.2

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/pkg/email"
-	pb "github.com/EZ4BRUCE/athena-server/proto"
 )
 
 func (svc *RuleService) ExecuteRule(r *pb.ReportReq, a *Aggregator, result float64) {

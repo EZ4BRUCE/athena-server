@@ -1,7 +1,7 @@
 package service
 
 import (
-	pb "github.com/EZ4BRUCE/athena-server/proto"
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 )
 
 func (svc *ReportService) ExecuteWarnings() error {

@@ -1,6 +1,6 @@
 package global
 
-import pb "github.com/EZ4BRUCE/athena-server/proto"
+import pb "github.com/EZ4BRUCE/athena-proto/proto"
 
 var (
 	// 记录当前已注册的主机id

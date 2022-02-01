@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/EZ4BRUCE/athena-server/proto"
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"golang.org/x/net/context"
 
 	"google.golang.org/grpc"

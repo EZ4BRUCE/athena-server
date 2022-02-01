@@ -4,10 +4,10 @@ import (
 	"log"
 	"net"
 
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
 	"github.com/EZ4BRUCE/athena-server/pkg/setting"
-	pb "github.com/EZ4BRUCE/athena-server/proto"
 	"github.com/EZ4BRUCE/athena-server/server"
 	"google.golang.org/grpc"
 )

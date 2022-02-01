@@ -3,8 +3,8 @@ package service
 import (
 	"log"
 
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
-	pb "github.com/EZ4BRUCE/athena-server/proto"
 )
 
 func (svc *RuleService) ExecuteFunc(function model.Function, rawReports []*pb.ReportReq) (float64, bool) {

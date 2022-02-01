@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/service"
-	pb "github.com/EZ4BRUCE/athena-server/proto"
 	"github.com/google/uuid"
 )
 
