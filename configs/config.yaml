@@ -3,14 +3,15 @@ RPC:
   # 聚合时间
   AggregationTime: 5
 Email:
-  Host: smtp.qq.com
+  Host: smtp.126.com
   Port: 465
-  UserName: 1m
-  Password: 11
+  UserName: athena_server@126.com
+  Password: ZUFLMRXSYCDXFVKK
   IsSSL: true
-  From: 122786302@qq.com
+  From: athena_server@126.com
   To:
     - lhy122786302@gmail.com
+    - 122786302@qq.com
 ReportDB:
   DBType: mongodb
   Host: 127.0.0.1:27018

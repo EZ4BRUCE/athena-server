@@ -35,11 +35,9 @@ func monitor(reportMap chan *pb.ReportReq) {
 	reportSvc := service.NewReportService(context.Background())
 	var list []*pb.ReportReq
 	// 这里记得开一个for循环
-
 	for report := range reportMap {
 		list = append(list, report)
 		counter--
-		fmt.Println(counter)
 		if counter == 0 {
 			// 从数据库中取出该指标对应的所有聚合器(每个聚合器包含对应的聚合函数和告警规则)
 			aggregators, err := ruleSvc.SearchAggregators(report.GetMetric())
@@ -52,6 +50,8 @@ func monitor(reportMap chan *pb.ReportReq) {
 				if danger {
 					// 系统异常，需要告警
 					log.Printf("指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+					// 每次执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
+					go ruleSvc.ExecuteRule(report, &aggregator, result)
 					err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
 					if err != nil {
 						log.Printf("reportSvc.CreateWarningEvent err:%s", err)
@@ -64,17 +64,15 @@ func monitor(reportMap chan *pb.ReportReq) {
 					}
 				}
 			}
-
 			list = make([]*pb.ReportReq, global.RPCSetting.AggregationTime)
 			counter = global.RPCSetting.AggregationTime
 		}
 	}
-
 }
 
 func (s *ReportServerServer) Report(ctx context.Context, r *pb.ReportReq) (*pb.ReportRsp, error) {
 	_, ok := global.RegisterMap[r.GetUId()]
-	if !ok {
+	if !ok || r.GetUId() == "" {
 		log.Printf("收到未注册Agent上报！time:%v, metric:%s, dimensions:%v, value:%v\n", r.GetTimestamp(), r.GetMetric(), r.GetDimensions(), r.GetValue())
 		return &pb.ReportRsp{Code: 10000001, Msg: "Agent未注册！"}, nil
 	}
@@ -84,6 +82,6 @@ func (s *ReportServerServer) Report(ctx context.Context, r *pb.ReportReq) (*pb.R
 	if err != nil {
 		return &pb.ReportRsp{Code: 10000001, Msg: "插入数据库失败"}, err
 	}
-	// fmt.Printf("report: time:%v, metric:%s, dimensions:%v, value:%v \n", r.GetTimestamp(), r.GetMetric(), r.GetDimensions(), r.GetValue())
+	fmt.Printf("report: time:%v, metric:%s, dimensions:%v, value:%v \n", r.GetTimestamp(), r.GetMetric(), r.GetDimensions(), r.GetValue())
 	return &pb.ReportRsp{Code: 10000001, Msg: "hello"}, nil
 }
