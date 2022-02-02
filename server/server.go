@@ -18,7 +18,6 @@ func NewReportServer() *ReportServerServer {
 }
 
 // 每个连接单独处理要在注册的时候用，因为注册只会注册一次
-// 防止重复注册
 func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*pb.RegisterRsp, error) {
 	// 分配UId
 	uId := uuid.New().String()
@@ -44,13 +43,12 @@ func monitor(reportMap chan *pb.ReportReq) {
 			if err != nil {
 				log.Printf("ruleSvc.SearchAggregators err:%s", err)
 			}
-			fmt.Println(report.GetMetric())
 			for _, aggregator := range aggregators {
 				result, danger := ruleSvc.ExecuteFunc(aggregator.Function, list)
 				if danger {
 					// 系统异常，需要告警
-					log.Printf("指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
-					// 每次执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
+					log.Printf("Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+					// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
 					go ruleSvc.ExecuteRule(report, &aggregator, result)
 					err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
 					if err != nil {

@@ -12,7 +12,8 @@ func (svc *RuleService) ExecuteFunc(function model.Function, rawReports []*pb.Re
 	case "MAX":
 		return MAX(rawReports), MAX(rawReports) >= function.Threshold
 	case "MIN":
-		return MIN(rawReports), MIN(rawReports) >= function.Threshold
+		// 场景是检测他有没有满血干活,聚合数据的最小值不可小于阈值
+		return MIN(rawReports), MIN(rawReports) < function.Threshold
 	case "AVG":
 		return AVG(rawReports), AVG(rawReports) >= function.Threshold
 	case "SUM":
