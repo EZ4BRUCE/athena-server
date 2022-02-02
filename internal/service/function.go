@@ -18,6 +18,8 @@ func (svc *RuleService) ExecuteFunc(function model.Function, rawReports []*pb.Re
 		return AVG(rawReports), AVG(rawReports) >= function.Threshold
 	case "SUM":
 		return SUM(rawReports), SUM(rawReports) >= function.Threshold
+	case "LOGIC":
+		return LOGIC(rawReports), LOGIC(rawReports) >= function.Threshold
 	default:
 		log.Printf("Function：找不到 %s 类型的聚合函数，返回0", function.Type)
 		return 0.0, false
@@ -53,6 +55,14 @@ func SUM(rawReports []*pb.ReportReq) float64 {
 }
 
 func AVG(rawReports []*pb.ReportReq) float64 {
+	sum := 0.0
+	for _, r := range rawReports {
+		sum += r.GetValue()
+	}
+	return sum / float64(len(rawReports))
+}
+
+func LOGIC(rawReports []*pb.ReportReq) float64 {
 	sum := 0.0
 	for _, r := range rawReports {
 		sum += r.GetValue()
