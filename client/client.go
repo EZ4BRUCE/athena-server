@@ -14,17 +14,14 @@ import (
 )
 
 var port string
-var metric string
 
 func init() {
 	flag.StringVar(&port, "p", "8888", "启动端口号")
-	// 还可以选memory_used
-	flag.StringVar(&metric, "m", "cpu_rate", "启动端口号")
 	flag.Parse()
 	rand.Seed(time.Now().UnixNano())
 }
 
-func Report(client pb.ReportServerClient, uid string) error {
+func Report(client pb.ReportServerClient, uid string, metric string) error {
 	resp, _ := client.Report(context.Background(), &pb.ReportReq{
 		UId:        uid,
 		Timestamp:  time.Now().Unix(),
@@ -37,10 +34,14 @@ func Report(client pb.ReportServerClient, uid string) error {
 }
 
 func Register(client pb.ReportServerClient) (string, error) {
-	resp, _ := client.Register(context.Background(), &pb.RegisterReq{
+	resp, err := client.Register(context.Background(), &pb.RegisterReq{
 		Timestamp:   time.Now().Unix(),
-		Description: "bruce",
+		Metrics:     []string{"cpu_rate", "memory_used"},
+		Description: "just a test",
 	})
+	if err != nil {
+		return "", err
+	}
 	log.Printf("client.Report resp{code: %d, Uid:%s, message: %s}", resp.Code, resp.UId, resp.Msg)
 	return resp.UId, nil
 }
@@ -50,9 +51,13 @@ func main() {
 	conn, _ := grpc.Dial(":"+port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	defer conn.Close()
 	client := pb.NewReportServerClient(conn)
-	uId, _ := Register(client)
-	for i := 0; i < 100; i++ {
-		_ = Report(client, uId)
+	uId, err := Register(client)
+	if err != nil {
+		panic(err)
+	}
+	for i := 0; i < 10; i++ {
+		_ = Report(client, uId, "cpu_rate")
+		_ = Report(client, uId, "memory_used")
 		time.Sleep(time.Second * 2)
 	}
 

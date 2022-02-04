@@ -39,7 +39,7 @@ func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64) {
 	if err != nil {
 		log.Printf("邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("邮件发送成功！")
+	log.Printf("状态 %s 异常 [%s告警] 邮件已发送", r.GetMetric(), a.Rule.Level)
 }
 
 func doCall() {

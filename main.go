@@ -23,8 +23,7 @@ func init() {
 		log.Fatalf("init.setupDBEngine err: %v", err)
 		panic(err)
 	}
-	global.RegisterMap = make(map[string]struct{}, 100)
-	global.ReportMap = make(map[string]chan *pb.ReportReq, global.RPCSetting.AggregationTime*2)
+	global.RegisterMap = make(map[string]global.Agent, 100)
 }
 
 func main() {
