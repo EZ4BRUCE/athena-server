@@ -2,6 +2,7 @@ RPC:
   Port: 8888
   # 聚合时间
   AggregationTime: 5
+  MaxConn: 100
 Email:
   Host: smtp.126.com
   Port: 465

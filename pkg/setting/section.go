@@ -3,6 +3,7 @@ package setting
 type RPCSettingS struct {
 	Port            string
 	AggregationTime int
+	MaxConn         int
 }
 
 type ReportDBSettingS struct {
