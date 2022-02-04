@@ -25,6 +25,7 @@ func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*
 	global.RegisterMap[uId] = struct{}{}
 	global.ReportMap[uId] = make(chan *pb.ReportReq, global.RPCSetting.AggregationTime*2)
 	go monitor(global.ReportMap[uId])
+	log.Printf("New Agent: %v", uId)
 	return &pb.RegisterRsp{Code: 10000001, UId: uId, Msg: "注册成功"}, nil
 }
 

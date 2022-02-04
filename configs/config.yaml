@@ -1,5 +1,5 @@
 RPC:
-  Port: 8000
+  Port: 8888
   # 聚合时间
   AggregationTime: 5
 Email:
@@ -14,13 +14,13 @@ Email:
     - 122786302@qq.com
 ReportDB:
   DBType: mongodb
-  Host: 127.0.0.1:27018
+  Host: mongodb:27017
   DBName: athena-server
 RuleDB:
   DBType: mysql
   Username: root
   Password: 123456
-  Host: 127.0.0.1:3307
+  Host: mysql:3306
   DBName: rule-server
   Charset: utf8mb4
   ParseTime: True

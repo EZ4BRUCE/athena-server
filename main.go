@@ -30,6 +30,7 @@ func init() {
 func main() {
 	s := grpc.NewServer()
 	pb.RegisterReportServerServer(s, server.NewReportServer())
+	log.Printf("告警系统正在运行")
 	lis, err := net.Listen("tcp", ":"+global.RPCSetting.Port)
 	if err != nil {
 		log.Fatalf("net.Listen error: %v", err)

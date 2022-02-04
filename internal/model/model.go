@@ -48,13 +48,13 @@ func NewRuleDBEngine(ruleDBSetting *setting.RuleDBSettingS) (*gorm.DB, error) {
 		DSN: dsn,
 	}), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{SingularTable: true},
-		Logger:         logger.Default.LogMode(logger.Info),
+		Logger:         logger.Default.LogMode(logger.Warn),
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	db.Logger.LogMode(logger.Info)
+	db.Logger.LogMode(logger.Warn)
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(ruleDBSetting.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(ruleDBSetting.MaxOpenConns)
