@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// 项目配置初始化，仅在程序开始时执行一次
 func init() {
 	err := setupSetting()
 	if err != nil {
@@ -41,6 +42,7 @@ func main() {
 
 }
 
+// 从configs中载入global配置
 func setupSetting() error {
 	setting, err := setting.NewSetting()
 	if err != nil {
@@ -65,17 +67,16 @@ func setupSetting() error {
 	return nil
 }
 
+// 根据global的设置初始化数据库
 func setupDBEngine() error {
 	var err error
 	global.ReportDBEngine, err = model.NewReportDBEngine(global.ReportDBSetting)
 	if err != nil {
 		return err
 	}
-
 	global.RuleDBEngine, err = model.NewRuleDBEngine(global.RuleDBSetting)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

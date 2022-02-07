@@ -6,6 +6,8 @@ import (
 )
 
 var (
+	// 告警服务数据库操作实例
 	ReportDBEngine *mongo.Database
-	RuleDBEngine   *gorm.DB
+	// 规则服务数据库操作实例
+	RuleDBEngine *gorm.DB
 )

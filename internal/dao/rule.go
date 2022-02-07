@@ -2,7 +2,8 @@ package dao
 
 import "github.com/EZ4BRUCE/athena-server/internal/model"
 
-// dao的方法，dao作为接收者
+// dao层方法，接收特定参数执行model方法
+
 func (d RuleDao) CreateRule(level, action, description string) error {
 	rule := model.Rule{Level: level, Action: action, Description: description}
 	return rule.Create(d.engine)

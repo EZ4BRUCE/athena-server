@@ -2,6 +2,7 @@ package setting
 
 import "github.com/spf13/viper"
 
+// setting封装一个Viper实例用于从configs.yaml中读取配置
 type Setting struct {
 	vp *viper.Viper
 }

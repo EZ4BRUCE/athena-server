@@ -8,12 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// 保存每一次运行正常的聚合结果到数据库
+// 正常事件：保存每一次运行正常的聚合结果到告警数据库
 type NormalEvent struct {
 	Reports []Report `bson:"reports"`
 }
 
-// 每一个已经触发了的警告事件还会绑定一个对应该警告的聚合器Values
+// 异常事件：保存触发了警告的事件
 type WarningEvent struct {
 	Reports        []Report `bson:"reports"`
 	AggregatorId   uint32   `bson:"aggregator_id"`
@@ -24,6 +24,7 @@ type WarningEvent struct {
 	AggregateValue float64  `bson:"aggregate_value"`
 }
 
+// 创建正常事件至告警数据库
 func (n NormalEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), n)
@@ -34,9 +35,9 @@ func (n NormalEvent) Create(db *mongo.Database) error {
 	id := result.InsertedID.(primitive.ObjectID)
 	id.Hex()
 	return nil
-
 }
 
+// 创建异常事件至告警数据库
 func (w WarningEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), w)
@@ -47,5 +48,4 @@ func (w WarningEvent) Create(db *mongo.Database) error {
 	id := result.InsertedID.(primitive.ObjectID)
 	id.Hex()
 	return nil
-
 }

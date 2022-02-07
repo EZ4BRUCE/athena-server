@@ -2,7 +2,8 @@ package dao
 
 import "github.com/EZ4BRUCE/athena-server/internal/model"
 
-// RuleDao的方法，RuleDao作为接收者
+// dao层方法，接收特定参数执行model方法
+
 func (d RuleDao) CreateAggregator(name, metric string, function_id, rule_id uint32) error {
 	aggregator := model.Aggregator{Name: name, Metric: metric, FunctionId: function_id, RuleId: rule_id}
 	return aggregator.Create(d.engine)

@@ -15,6 +15,7 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+// 根据配置创建mongodb的DB引擎实例用于告警信息存储
 func NewReportDBEngine(reportDBSetting *setting.ReportDBSettingS) (*mongo.Database, error) {
 	var err error
 	clientOptions := options.Client().ApplyURI("mongodb://" + global.ReportDBSetting.Host)
@@ -34,6 +35,7 @@ func NewReportDBEngine(reportDBSetting *setting.ReportDBSettingS) (*mongo.Databa
 
 }
 
+// 根据配置创建GORM的DB引擎实例用于读取规则服务
 func NewRuleDBEngine(ruleDBSetting *setting.RuleDBSettingS) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local",
 		ruleDBSetting.UserName,
@@ -43,7 +45,6 @@ func NewRuleDBEngine(ruleDBSetting *setting.RuleDBSettingS) (*gorm.DB, error) {
 		ruleDBSetting.Charset,
 		ruleDBSetting.ParseTime,
 	)
-
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN: dsn,
 	}), &gorm.Config{
@@ -53,11 +54,9 @@ func NewRuleDBEngine(ruleDBSetting *setting.RuleDBSettingS) (*gorm.DB, error) {
 	if err != nil {
 		panic(err)
 	}
-
 	db.Logger.LogMode(logger.Warn)
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(ruleDBSetting.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(ruleDBSetting.MaxOpenConns)
 	return db, nil
-
 }

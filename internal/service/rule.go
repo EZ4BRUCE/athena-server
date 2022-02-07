@@ -9,19 +9,24 @@ import (
 	"github.com/EZ4BRUCE/athena-server/pkg/email"
 )
 
+// service层方法，接收请求结构体或特定参数执行特定操作
+
+// 执行告警规则函数
 func (svc *RuleService) ExecuteRule(r *pb.ReportReq, a *Aggregator, result float64) {
 	switch a.Rule.Action {
-	case "EMAIL":
+	case global.EMAILAction:
 		sendWarningEmail(r, a, result)
-	case "PHONE":
+	case global.PHONEAction:
 		doCall()
-	case "MESSAGE":
+	case global.MESSAGEAction:
 		sendMessage()
 	default:
 		log.Printf("Rule：找不到 %s 告警动作\n", a.Rule.Action)
 		return
 	}
 }
+
+// 定义告警行为的逻辑实现
 
 func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64) {
 	mailer := email.NewEmail(&email.SMTPInfo{

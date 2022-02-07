@@ -2,7 +2,7 @@ package service
 
 import "github.com/EZ4BRUCE/athena-server/internal/model"
 
-// 定义业务逻辑需要的聚合器，聚合函数与告警规则不再以id出现
+// service层的聚合器结构体
 type Aggregator struct {
 	Id       uint32
 	Name     string
@@ -11,7 +11,9 @@ type Aggregator struct {
 	Rule     model.Rule
 }
 
-// 取出数据库的规则等信息，返回该指标对应的所有聚合器
+// service层方法，接收请求结构体或特定参数执行dao方法
+
+// 返回特定指标的所有聚合器（包含聚合函数和告警规则）
 func (svc *RuleService) SearchAggregators(metric string) ([]Aggregator, error) {
 	all, err := svc.dao.SearchAggregators(metric)
 	if err != nil {

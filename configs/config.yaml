@@ -1,8 +1,11 @@
+# RPC服务器配置
 RPC:
   Port: 8888
-  # 聚合时间
+  # 聚合时间（单位时间的个数）
   AggregationTime: 5
+  # 初始化用户注册表的大小
   MaxConn: 100
+# 邮件发送配置
 Email:
   Host: smtp.126.com
   Port: 465
@@ -12,10 +15,12 @@ Email:
   From: athena_server@126.com
   To:
     - 122786302@qq.com
+# 告警服务数据库配置
 ReportDB:
   DBType: mongodb
   Host: mongodb:27017
   DBName: athena-server
+# 规则配置服务数据库配置
 RuleDB:
   DBType: mysql
   Username: root

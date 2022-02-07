@@ -2,7 +2,8 @@ package dao
 
 import "github.com/EZ4BRUCE/athena-server/internal/model"
 
-// dao的方法，dao作为接收者
+// dao层方法，接收特定参数执行model方法
+
 func (d ReportDao) CreateNormalEvent(reports []model.Report) error {
 	normalEvent := model.NormalEvent{Reports: reports}
 	return normalEvent.Create(d.engine)

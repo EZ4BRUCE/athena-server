@@ -5,7 +5,9 @@ import (
 	"github.com/EZ4BRUCE/athena-server/internal/model"
 )
 
-// Service的方法，svc作为接收者
+// service层方法，接收请求结构体或特定参数执行dao方法
+
+// 保存正常聚合事件
 func (svc *ReportService) CreateNormalEvent(rawReports []*pb.ReportReq) error {
 	var reports []model.Report
 	for _, r := range rawReports {
@@ -15,7 +17,7 @@ func (svc *ReportService) CreateNormalEvent(rawReports []*pb.ReportReq) error {
 	return svc.dao.CreateNormalEvent(reports)
 }
 
-// Service的方法，svc作为接收者
+// 保存异常聚合事件
 func (svc *ReportService) CreateWarningEvent(rawReports []*pb.ReportReq, aggregatorId uint32, aggregatorName string, metric string, function model.Function, rule model.Rule, aggregateValue float64) error {
 	var reports []model.Report
 	for _, r := range rawReports {

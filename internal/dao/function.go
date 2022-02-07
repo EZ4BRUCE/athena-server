@@ -2,7 +2,8 @@ package dao
 
 import "github.com/EZ4BRUCE/athena-server/internal/model"
 
-// dao的方法，dao作为接收者
+// dao层方法，接收特定参数执行model方法
+
 func (d RuleDao) CreateFunction(Type string, threshold float64, description string) error {
 	function := model.Function{Type: Type, Threshold: threshold, Description: description}
 	return function.Create(d.engine)

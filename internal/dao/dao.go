@@ -5,6 +5,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// Dao封装一个特定db引擎实例用于执行model方法
+
 type ReportDao struct {
 	engine *mongo.Database
 }
