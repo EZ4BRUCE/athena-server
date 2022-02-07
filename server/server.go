@@ -96,6 +96,6 @@ func (s *ReportServerServer) Report(ctx context.Context, r *pb.ReportReq) (*pb.R
 		log.Printf("Create Report err:%s\n", err)
 		return &pb.ReportRsp{Code: 10000002, Msg: "插入数据库失败"}, err
 	}
-	log.Printf("report: time:%v, metric:%s, dimensions:%v, value:%v \n", r.GetTimestamp(), r.GetMetric(), r.GetDimensions(), r.GetValue())
+	log.Printf("report: agent:%s, time:%v, metric:%s, dimensions:%v, value:%v \n", r.GetUId(), r.GetTimestamp(), r.GetMetric(), r.GetDimensions(), r.GetValue())
 	return &pb.ReportRsp{Code: 10000000, Msg: "发送成功！"}, nil
 }
