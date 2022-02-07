@@ -11,7 +11,6 @@ Email:
   IsSSL: true
   From: athena_server@126.com
   To:
-    - lhy122786302@gmail.com
     - 122786302@qq.com
 ReportDB:
   DBType: mongodb
