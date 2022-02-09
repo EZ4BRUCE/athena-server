@@ -1,5 +1,16 @@
-# athena
+# athena-server告警系统
 
-docker run -p 27018:27017 --name mongo-docker -v mongo-data:/data -d mongo
+此项目为Athena监控系统的告警系统，查看具体部署需要查看此docker-compose的README
 
- protoc --go_out=plugins=grpc:./proto ./proto/*.proto
+```
+https://github.com/EZ4BRUCE/athena
+```
+
+
+
+
+
+
+
+
+
