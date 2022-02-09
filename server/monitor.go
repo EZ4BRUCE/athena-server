@@ -11,7 +11,6 @@ import (
 )
 
 func checkAlive(agent *Agent) {
-	log.Println(agent)
 	var ticker *time.Ticker = time.NewTicker(time.Duration(agent.CheckAliveTime) * time.Second)
 	for range ticker.C {
 		if agent.CheckAliveStatus {

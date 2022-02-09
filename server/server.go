@@ -21,7 +21,6 @@ func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*
 	// 分配UId
 	uId := uuid.New().String()
 	// 将该agent注册到服务端用户注册表中，并为用户指标信息表分配内存
-	log.Println("Register:", r.GetCheckAliveTime())
 
 	RegisterMap[uId] = &Agent{
 		UId:              uId,
@@ -36,7 +35,7 @@ func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*
 		// 对每一个指标使用一个协程监控并处理
 		go monitor(RegisterMap[uId].MetricMap[metric])
 	}
-	log.Printf("New Agent: %v", uId)
+	log.Printf("[新增主机] New Agent: %v , Alive Check Frequency: %d s", uId, r.GetCheckAliveTime())
 	go sendLoginEmail(r, uId)
 	go checkAlive(RegisterMap[uId])
 	return &pb.RegisterRsp{Code: 10000000, UId: uId, Msg: "注册成功"}, nil
