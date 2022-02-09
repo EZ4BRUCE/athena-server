@@ -3,11 +3,10 @@ module github.com/EZ4BRUCE/athena-server
 go 1.17
 
 require (
-	github.com/EZ4BRUCE/athena-proto v0.0.0-20220204053844-8a6fffbdf612
+	github.com/EZ4BRUCE/athena-proto v0.0.0-20220209031520-52cfd3e1d38a
 	github.com/google/uuid v1.1.2
 	github.com/spf13/viper v1.10.1
 	go.mongodb.org/mongo-driver v1.8.2
-	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d
 	google.golang.org/grpc v1.44.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/mysql v1.2.3
@@ -38,6 +37,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
+	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/text v0.3.7 // indirect

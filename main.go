@@ -25,7 +25,7 @@ func init() {
 		log.Fatalf("init.setupDBEngine err: %v", err)
 		panic(err)
 	}
-	global.RegisterMap = make(map[string]global.Agent, global.RPCSetting.MaxConn)
+	server.RegisterMap = make(map[string]*server.Agent, global.RPCSetting.MaxConn)
 }
 
 func main() {
