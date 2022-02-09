@@ -14,6 +14,7 @@ import (
 
 // 项目配置初始化，仅在程序开始时执行一次
 func init() {
+	log.SetPrefix("[Athena-Server]")
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)

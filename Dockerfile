@@ -20,6 +20,10 @@ RUN go generate && go env && go build -o athena-server .
 
 FROM alpine:latest
 
+RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata
+
 LABEL MAINTAINER="EZ4BRUCE@lhy122786302@gmail.com"
 WORKDIR /go/src/athena-server
 
