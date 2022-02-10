@@ -14,7 +14,7 @@ Email:
   IsSSL: true
   From: athena_server@126.com
   To:
-    - 122786302@qq.com
+    - athena_client@163.com
 # 告警服务数据库配置
 ReportDB:
   DBType: mongodb
