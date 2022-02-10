@@ -40,7 +40,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("server.Serve error: %v", err)
 	}
-
 }
 
 // 从configs中载入global配置

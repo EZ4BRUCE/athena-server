@@ -23,6 +23,7 @@ func NewEmail(info *SMTPInfo) *Email {
 	return &Email{SMTPInfo: info}
 }
 
+// 发送指定标题和内容的邮件至邮箱组
 func (e *Email) SendMail(to []string, subject, body string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", e.From)

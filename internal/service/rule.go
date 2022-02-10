@@ -21,7 +21,7 @@ func (svc *RuleService) ExecuteRule(r *pb.ReportReq, a *Aggregator, result float
 	case global.MESSAGEAction:
 		sendMessage()
 	default:
-		log.Printf("Rule：找不到 %s 告警动作\n", a.Rule.Action)
+		log.Printf("[参数错误] Rule：找不到 %s 告警动作\n", a.Rule.Action)
 		return
 	}
 }
@@ -42,9 +42,9 @@ func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64) {
 		r.GetUId(), r.GetTimestamp(), a.Rule.Level, r.GetMetric(), r.GetDimensions(), a.Function.Type, a.Function.Description, result)
 	err := mailer.SendMail(global.EmailSetting.To, subject, body)
 	if err != nil {
-		log.Printf("邮件发送失败！mailer.SendMail err:%s", err)
+		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("状态 %s 异常 [%s告警] 邮件已发送", r.GetMetric(), a.Rule.Level)
+	log.Printf("<%s告警> 邮件已发送", a.Rule.Level)
 }
 
 func doCall() {

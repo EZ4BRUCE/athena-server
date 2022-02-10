@@ -29,7 +29,7 @@ func (n NormalEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), n)
 	if err != nil {
-		log.Printf("normalEvent.Create err:%s", err)
+		log.Printf("[数据库错误] normalEvent.Create err:%s", err)
 		return err
 	}
 	id := result.InsertedID.(primitive.ObjectID)
@@ -42,7 +42,7 @@ func (w WarningEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), w)
 	if err != nil {
-		log.Printf("normalEvent.Create err:%s", err)
+		log.Printf("[数据库错误] normalEvent.Create err:%s", err)
 		return err
 	}
 	id := result.InsertedID.(primitive.ObjectID)

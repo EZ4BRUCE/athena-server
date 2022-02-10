@@ -10,12 +10,15 @@ import (
 	"github.com/EZ4BRUCE/athena-server/internal/service"
 )
 
+// 定时检测某主机状态是否正常
 func checkAlive(agent *Agent) {
+	// 若在指定时间的2倍内没有上报数据，则视为连接异常
 	var ticker *time.Ticker = time.NewTicker(time.Duration(agent.CheckAliveTime) * time.Second)
 	for range ticker.C {
 		if agent.CheckAliveStatus {
 			agent.CheckAliveStatus = false
 		} else {
+			// 断开连接并释放资源
 			log.Printf("[连接断开] 主机 %s 出现连接异常，需要邮件通知\n", agent.UId)
 			go sendOfflineEmail(agent)
 			agent.IsDead = true
@@ -25,7 +28,7 @@ func checkAlive(agent *Agent) {
 	}
 }
 
-// 释放断开连接的资源
+// 释放断开连接的主机的资源
 func release(agent *Agent) {
 	for k := range agent.MetricMap {
 		// 遍历每一个指标的channel将其关闭，关闭过后对应的monitor协程会退出
@@ -44,16 +47,17 @@ func monitor(reportMap chan *pb.ReportReq) {
 	reportSvc := service.NewReportService(context.Background())
 	var list []*pb.ReportReq
 	for report := range reportMap {
-		// 收到上报，将检测变量设为true
+		// 每次收到该agent上报，证明其连接正常，将检测变量设为true
 		RegisterMap[report.GetUId()].CheckAliveStatus = true
 		list = append(list, report)
+		// 聚合计数器
 		counter--
 		if counter == 0 {
 			safe := true
 			// 从数据库中取出该指标对应的所有聚合器(每个聚合器包含对应的聚合函数和告警规则)
 			aggregators, err := ruleSvc.SearchAggregators(report.GetMetric())
 			if err != nil {
-				log.Printf("ruleSvc.SearchAggregators err:%s", err)
+				log.Printf("[载入错误] ruleSvc.SearchAggregators err:%s", err)
 			}
 			// 对该指标的每个聚合器进行告警判断
 			for _, aggregator := range aggregators {
@@ -61,21 +65,22 @@ func monitor(reportMap chan *pb.ReportReq) {
 				if danger {
 					// 系统异常，需要告警
 					safe = false
-					log.Printf("Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+					log.Printf("[监控异常] Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
 					// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
 					go ruleSvc.ExecuteRule(report, &aggregator, result)
 					err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
 					if err != nil {
-						log.Printf("reportSvc.CreateWarningEvent err:%s", err)
+						log.Printf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
 					}
 				}
 			}
 			if safe {
 				// 系统正常
-				log.Printf("Timestamp:%v 指标 %s 正常，无需告警\n", report.GetTimestamp(), report.GetMetric())
+				log.Printf("[监控正常] Timestamp:%v 指标 %s 正常，无需告警\n", report.GetTimestamp(), report.GetMetric())
+				// 保存聚合事件
 				err = reportSvc.CreateNormalEvent(list)
 				if err != nil {
-					log.Printf("reportSvc.CreateNormalEvent err:%s", err)
+					log.Printf("[数据库错误] reportSvc.CreateNormalEvent err:%s", err)
 				}
 			}
 			// 清空list
@@ -84,5 +89,4 @@ func monitor(reportMap chan *pb.ReportReq) {
 			counter = global.RPCSetting.AggregationTime
 		}
 	}
-
 }

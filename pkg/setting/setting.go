@@ -7,6 +7,7 @@ type Setting struct {
 	vp *viper.Viper
 }
 
+// 读取文件
 func NewSetting() (*Setting, error) {
 	vp := viper.New()
 	vp.SetConfigName("config")
