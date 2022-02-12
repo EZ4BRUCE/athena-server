@@ -3,7 +3,7 @@ package setting
 // RPC服务器配置结构体
 type RPCSettingS struct {
 	Port            string
-	AggregationTime int
+	AggregationTime int32
 	MaxConn         int
 }
 

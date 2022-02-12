@@ -38,9 +38,9 @@ func release(agent *Agent) {
 }
 
 // 监控单个指标对应的channel
-func monitor(reportMap chan *pb.ReportReq) {
+func monitor(reportMap chan *pb.ReportReq, aggregationTime int32) {
 	// 聚合计数器，每当收到的report到达聚合时间的数目即需要进行聚合
-	counter := global.RPCSetting.AggregationTime
+	counter := aggregationTime
 	// 规则服务，用于从规则数据库中读取规则
 	ruleSvc := service.NewRuleService(context.Background())
 	// 告警服务，用于保存聚合信息以及执行告警动作
@@ -50,7 +50,7 @@ func monitor(reportMap chan *pb.ReportReq) {
 		// 每次收到该agent上报，证明其连接正常，将检测变量设为true
 		RegisterMap[report.GetUId()].CheckAliveStatus = true
 		list = append(list, report)
-		// 聚合计数器
+		// 更新聚合计数器
 		counter--
 		if counter == 0 {
 			safe := true
@@ -86,7 +86,7 @@ func monitor(reportMap chan *pb.ReportReq) {
 			// 清空list
 			list = make([]*pb.ReportReq, global.RPCSetting.AggregationTime)
 			// 计数器设置回初值
-			counter = global.RPCSetting.AggregationTime
+			counter = aggregationTime
 		}
 	}
 }

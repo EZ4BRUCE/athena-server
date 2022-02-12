@@ -8,6 +8,7 @@ import (
 type Agent struct {
 	UId              string
 	CheckAliveTime   int32
+	AggregationTime  int32
 	CheckAliveStatus bool
 	IsDead           bool
 	// 记录主机的最近上报信息（用于聚合数据）
