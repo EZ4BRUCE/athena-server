@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
+	"github.com/EZ4BRUCE/athena-server/internal/service"
 	"github.com/EZ4BRUCE/athena-server/pkg/setting"
 	"github.com/EZ4BRUCE/athena-server/server"
 	"google.golang.org/grpc"
@@ -26,6 +28,12 @@ func init() {
 		panic(err)
 	}
 	server.RegisterMap = make(map[string]*server.Agent, global.RPCSetting.MaxConn)
+	svc := service.NewRuleService(context.Background())
+	global.EmailSetting.To, err = svc.GetAllEmails()
+	if err != nil {
+		log.Fatalf("svc.GetAllEmails err: %v", err)
+		panic(err)
+	}
 }
 
 func main() {
@@ -64,6 +72,7 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
