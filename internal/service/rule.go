@@ -44,7 +44,7 @@ func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64) {
 	if err != nil {
 		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("<%s告警> 邮件已发送", a.Rule.Level)
+	log.Printf("<EMAIL操作> 邮件已发送")
 }
 
 func doCall() {
