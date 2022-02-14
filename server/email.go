@@ -25,7 +25,7 @@ func sendLoginEmail(r *pb.RegisterReq, uId string) {
 	if err != nil {
 		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("<新增主机> 邮件通知已发送")
+	log.Printf("<EMAIL操作> 邮件已发送")
 }
 
 // 发送链接异常主机告警邮件
@@ -44,5 +44,5 @@ func sendOfflineEmail(agent *Agent) {
 	if err != nil {
 		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("<主机异常> 邮件已发送")
+	log.Printf("<EMAIL操作> 邮件已发送")
 }
