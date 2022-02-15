@@ -27,7 +27,6 @@ func (svc *RuleService) ExecuteRule(r *pb.ReportReq, a *Aggregator, result float
 }
 
 // 定义告警行为的逻辑实现
-
 func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64) {
 	mailer := email.NewEmail(&email.SMTPInfo{
 		Host:     global.EmailSetting.Host,
