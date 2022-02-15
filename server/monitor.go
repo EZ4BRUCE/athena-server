@@ -41,10 +41,6 @@ func release(agent *Agent) {
 func monitor(metricChan chan *pb.ReportReq, aggregationTime int32) {
 	// 聚合计数器，每当收到的report到达聚合时间的数目即需要进行聚合
 	counter := aggregationTime
-	// 规则服务，用于从规则数据库中读取规则
-	ruleSvc := service.NewRuleService(context.Background())
-	// 告警服务，用于保存聚合信息以及执行告警动作
-	reportSvc := service.NewReportService(context.Background())
 	var list []*pb.ReportReq
 	for report := range metricChan {
 		// 每次收到该agent上报，证明其连接正常，将检测变量设为true
@@ -53,40 +49,50 @@ func monitor(metricChan chan *pb.ReportReq, aggregationTime int32) {
 		// 更新聚合计数器
 		counter--
 		if counter == 0 {
-			safe := true
-			// 从数据库中取出该指标对应的所有聚合器(每个聚合器包含对应的聚合函数和告警规则)
-			aggregators, err := ruleSvc.SearchAggregators(report.GetMetric())
-			if err != nil {
-				log.Printf("[载入错误] ruleSvc.SearchAggregators err:%s", err)
-			}
-			// 对该指标的每个聚合器进行告警判断
-			for _, aggregator := range aggregators {
-				result, danger := ruleSvc.ExecuteFunc(aggregator.Function, list)
-				if danger {
-					// 系统异常，需要告警
-					safe = false
-					log.Printf("[监控异常] Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
-					// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
-					go ruleSvc.ExecuteRule(report, &aggregator, result)
-					err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
-					if err != nil {
-						log.Printf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
-					}
-				}
-			}
-			if safe {
-				// 系统正常
-				log.Printf("[监控正常] Timestamp:%v 指标 %s 正常，无需告警\n", report.GetTimestamp(), report.GetMetric())
-				// 保存聚合事件
-				err = reportSvc.CreateNormalEvent(list)
-				if err != nil {
-					log.Printf("[数据库错误] reportSvc.CreateNormalEvent err:%s", err)
-				}
-			}
+			// 执行一次聚合操作
+			go doAggregation(list, report)
 			// 清空list
 			list = make([]*pb.ReportReq, global.RPCSetting.AggregationTime)
 			// 计数器设置回初值
 			counter = aggregationTime
+		}
+	}
+}
+
+func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
+	// 规则服务，用于从规则数据库中读取规则
+	ruleSvc := service.NewRuleService(context.Background())
+	// 告警服务，用于保存聚合信息以及执行告警动作
+	reportSvc := service.NewReportService(context.Background())
+	safe := true
+	// 从数据库中取出该指标对应的所有聚合器(每个聚合器包含对应的聚合函数和告警规则)
+	aggregators, err := ruleSvc.SearchAggregators(report.GetMetric())
+	if err != nil {
+		log.Printf("[载入错误] ruleSvc.SearchAggregators err:%s", err)
+	}
+	// 对该指标的每个聚合器进行告警判断
+	for _, aggregator := range aggregators {
+		result, danger := ruleSvc.ExecuteFunc(aggregator.Function, list)
+		if danger {
+			// 系统异常，需要告警
+			safe = false
+			log.Printf("[监控异常] Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+			// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
+			// go ruleSvc.ExecuteRule(report, &aggregator, result)
+			ruleSvc.ExecuteRule(report, &aggregator, result)
+			err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
+			if err != nil {
+				log.Printf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
+			}
+		}
+	}
+	if safe {
+		// 系统正常
+		log.Printf("[监控正常] Timestamp:%v 指标 %s 正常，无需告警\n", report.GetTimestamp(), report.GetMetric())
+		// 保存聚合事件
+		err = reportSvc.CreateNormalEvent(list)
+		if err != nil {
+			log.Printf("[数据库错误] reportSvc.CreateNormalEvent err:%s", err)
 		}
 	}
 }
