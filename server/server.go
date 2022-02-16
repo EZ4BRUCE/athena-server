@@ -53,7 +53,7 @@ func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*
 	}
 	// 发送新增主机通知邮件
 	go sendLoginEmail(r, uId)
-	global.Logger.Infof("[新增主机] 新注册 Agent: %v , 连接诊断频率: %d s , 聚合时间 %d 个单位上报粒度时间 ", uId, r.GetCheckAliveTime(), r.GetAggregationTime())
+	global.Logger.Infof("[新增主机] 新注册 Agent: %v , 连接诊断频率: %d s , 聚合时间 %d 个单位上报粒度时间 ", uId, r.GetCheckAliveTime(), aggregationTime)
 	// 新建协程监控该主机连接状态
 	go checkAlive(RegisterMap[uId])
 
