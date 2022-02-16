@@ -1,8 +1,6 @@
 package service
 
 import (
-	"log"
-
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
@@ -25,7 +23,7 @@ func (svc *RuleService) ExecuteFunc(function model.Function, rawReports []*pb.Re
 	case global.LOGICFunction:
 		return LOGIC(rawReports), LOGIC(rawReports) >= function.Threshold
 	default:
-		log.Printf("[参数错误] Function：找不到 %s 类型的聚合函数，返回0", function.Type)
+		global.Logger.Errorf("[参数错误] Function：找不到 %s 类型的聚合函数，返回0", function.Type)
 		return 0.0, false
 	}
 }

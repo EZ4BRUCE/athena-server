@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
@@ -23,9 +22,9 @@ func sendLoginEmail(r *pb.RegisterReq, uId string) {
 	body := fmt.Sprintf("新主机注册，分配其UID为: %s\t\n主机详情：注册时间戳：%v\t 监控指标：%v\t 描述：%v", uId, r.GetTimestamp(), r.GetMetrics(), r.GetDescription())
 	err := mailer.SendMail(global.EmailSetting.To, subject, body)
 	if err != nil {
-		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
+		global.Logger.Errorf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("<EMAIL操作> 邮件已发送")
+	global.Logger.Infof("<EMAIL操作> 邮件已发送")
 }
 
 // 发送链接异常主机告警邮件
@@ -42,7 +41,7 @@ func sendOfflineEmail(agent *Agent) {
 	body := fmt.Sprintf("异常主机Uid: %s\t，已%d未收到其上报信息", agent.UId, agent.CheckAliveTime)
 	err := mailer.SendMail(global.EmailSetting.To, subject, body)
 	if err != nil {
-		log.Printf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
+		global.Logger.Errorf("[邮件错误] 邮件发送失败！mailer.SendMail err:%s", err)
 	}
-	log.Printf("<EMAIL操作> 邮件已发送")
+	global.Logger.Infof("<EMAIL操作> 邮件已发送")
 }

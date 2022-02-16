@@ -2,8 +2,8 @@ package model
 
 import (
 	"context"
-	"log"
 
+	"github.com/EZ4BRUCE/athena-server/global"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -29,7 +29,7 @@ func (n NormalEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), n)
 	if err != nil {
-		log.Printf("[数据库错误] normalEvent.Create err:%s", err)
+		global.Logger.Errorf("[数据库错误] normalEvent.Create err:%s", err)
 		return err
 	}
 	id := result.InsertedID.(primitive.ObjectID)
@@ -42,7 +42,7 @@ func (w WarningEvent) Create(db *mongo.Database) error {
 	collection := db.Collection("event")
 	result, err := collection.InsertOne(context.TODO(), w)
 	if err != nil {
-		log.Printf("[数据库错误] normalEvent.Create err:%s", err)
+		global.Logger.Errorf("[数据库错误] normalEvent.Create err:%s", err)
 		return err
 	}
 	id := result.InsertedID.(primitive.ObjectID)

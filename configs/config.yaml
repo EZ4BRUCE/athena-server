@@ -1,15 +1,35 @@
 # RPC服务器配置
 RPC:
+  # gRPC端口
   Port: 8888
   # 聚合时间（单位时间的个数）
   AggregationTime: 5
   # 初始化用户注册表的大小
   MaxConn: 100
+LOG: 
+  # 日志文件的位置 
+  LogSavePath: storage/logs/
+  # 日志文件名
+  LogFileName: athena-server
+  # 日志文件后缀
+  LogFileExt: .log
+  # 在进行切割之前，日志文件的最大大小（以MB为单位）
+  MaxSize: 10
+  # 保留旧文件的最大个数
+  MaxBackups: 5
+  # 保留旧文件的最大天数
+  MaxAge: 30
+  # 是否压缩/归档旧文件
+  Compress: false
 # 邮件发送配置
 Email:
+  # 发送服务器ip
   Host: smtp.126.com
+  # 端口
   Port: 465
+  # 发送用户名
   UserName: athena_server@126.com
+  # smtp口令
   Password: RJPNHMTNLHTKDRGH
   IsSSL: true
   From: athena_server@126.com

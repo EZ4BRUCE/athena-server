@@ -12,6 +12,7 @@ type Agent struct {
 	CheckAliveStatus bool                          // 当前连接存活状态
 	IsDead           bool                          // 标识该Agent是否已断开
 	MetricMap        map[string]chan *pb.ReportReq // 最近上报信息(用于聚合数据)
+	Description      string                        //主机描述
 }
 
 var (

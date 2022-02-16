@@ -9,6 +9,7 @@ import (
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/internal/model"
 	"github.com/EZ4BRUCE/athena-server/internal/service"
+	"github.com/EZ4BRUCE/athena-server/pkg/logger"
 	"github.com/EZ4BRUCE/athena-server/pkg/setting"
 	"github.com/EZ4BRUCE/athena-server/server"
 	"google.golang.org/grpc"
@@ -16,7 +17,6 @@ import (
 
 // 项目配置初始化，仅在程序开始时执行一次
 func init() {
-	log.SetPrefix("[Athena-Server]")
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
@@ -34,12 +34,14 @@ func init() {
 		log.Fatalf("svc.GetAllEmails err: %v", err)
 		panic(err)
 	}
+	setupLogger()
+
 }
 
 func main() {
 	s := grpc.NewServer()
 	pb.RegisterReportServerServer(s, server.NewReportServer())
-	log.Printf("告警系统正在运行")
+	global.Logger.Infof("告警系统正在运行")
 	lis, err := net.Listen("tcp", ":"+global.RPCSetting.Port)
 	if err != nil {
 		log.Fatalf("net.Listen error: %v", err)
@@ -57,6 +59,10 @@ func setupSetting() error {
 		return err
 	}
 	err = setting.ReadSection("RPC", &global.RPCSetting)
+	if err != nil {
+		return err
+	}
+	err = setting.ReadSection("LOG", &global.LOGSetting)
 	if err != nil {
 		return err
 	}
@@ -88,4 +94,8 @@ func setupDBEngine() error {
 		return err
 	}
 	return nil
+}
+
+func setupLogger() {
+	global.Logger = logger.NewLogger(global.LOGSetting)
 }

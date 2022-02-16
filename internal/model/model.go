@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/EZ4BRUCE/athena-server/global"
 	"github.com/EZ4BRUCE/athena-server/pkg/setting"
@@ -22,13 +21,13 @@ func NewReportDBEngine(reportDBSetting *setting.ReportDBSettingS) (*mongo.Databa
 	// 连接到MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		global.Logger.Fatal(err)
 		return nil, err
 	}
 	// 检查连接
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		log.Fatal(err)
+		global.Logger.Fatal(err)
 		return nil, err
 	}
 	return client.Database(reportDBSetting.DBName), nil
@@ -52,6 +51,7 @@ func NewRuleDBEngine(ruleDBSetting *setting.RuleDBSettingS) (*gorm.DB, error) {
 		Logger:         logger.Default.LogMode(logger.Warn),
 	})
 	if err != nil {
+		global.Logger.Panic(err)
 		panic(err)
 	}
 	db.Logger.LogMode(logger.Warn)

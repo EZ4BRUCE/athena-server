@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 	"time"
 
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
@@ -19,7 +18,7 @@ func checkAlive(agent *Agent) {
 			agent.CheckAliveStatus = false
 		} else {
 			// 断开连接并释放资源
-			log.Printf("[连接断开] 主机 %s 出现连接异常，需要邮件通知\n", agent.UId)
+			global.Logger.Errorf("[连接断开] 主机 %s 出现连接异常，需要邮件通知\n", agent.UId)
 			go sendOfflineEmail(agent)
 			agent.IsDead = true
 			release(agent)
@@ -68,7 +67,8 @@ func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 	// 从数据库中取出该指标对应的所有聚合器(每个聚合器包含对应的聚合函数和告警规则)
 	aggregators, err := ruleSvc.SearchAggregators(report.GetMetric())
 	if err != nil {
-		log.Printf("[载入错误] ruleSvc.SearchAggregators err:%s", err)
+		global.Logger.Errorf("[规则载入错误] ruleSvc.SearchAggregators err:%s", err)
+		return
 	}
 	// 对该指标的每个聚合器进行告警判断
 	for _, aggregator := range aggregators {
@@ -76,23 +76,23 @@ func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 		if danger {
 			// 系统异常，需要告警
 			safe = false
-			log.Printf("[监控异常] Timestamp:%v 指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+			global.Logger.Infof("[监控异常] Timestamp:%v 主机%s(%s)  指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), RegisterMap[report.GetUId()].UId, RegisterMap[report.GetUId()].Description, aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
 			// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
 			// go ruleSvc.ExecuteRule(report, &aggregator, result)
-			ruleSvc.ExecuteRule(report, &aggregator, result)
+			ruleSvc.ExecuteRule(report, &aggregator, result, RegisterMap[report.GetUId()].Description)
 			err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
 			if err != nil {
-				log.Printf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
+				global.Logger.Errorf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
 			}
 		}
 	}
 	if safe {
 		// 系统正常
-		log.Printf("[监控正常] Timestamp:%v 指标 %s 正常，无需告警\n", report.GetTimestamp(), report.GetMetric())
+		global.Logger.Infof("[监控正常] Timestamp:%v 主机%s(%s) 指标 %s 正常，无需告警\n", report.GetTimestamp(), RegisterMap[report.GetUId()].UId, RegisterMap[report.GetUId()].Description, report.GetMetric())
 		// 保存聚合事件
 		err = reportSvc.CreateNormalEvent(list)
 		if err != nil {
-			log.Printf("[数据库错误] reportSvc.CreateNormalEvent err:%s", err)
+			global.Logger.Errorf("[数据库错误] reportSvc.CreateNormalEvent err:%s", err)
 		}
 	}
 }
