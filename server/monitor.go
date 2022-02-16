@@ -18,7 +18,7 @@ func checkAlive(agent *Agent) {
 			agent.CheckAliveStatus = false
 		} else {
 			// 断开连接并释放资源
-			global.Logger.Errorf("[连接断开] 主机 %s 出现连接异常，需要邮件通知\n", agent.UId)
+			global.Logger.Errorf("[连接断开] 主机 %s(%s) 出现连接异常，需要邮件通知\n", agent.UId, agent.Description)
 			go sendOfflineEmail(agent)
 			agent.IsDead = true
 			release(agent)
