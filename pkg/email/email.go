@@ -6,11 +6,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-type EmailService struct {
-	*SMTPInfo
-}
-
-type SMTPInfo struct {
+type Mailer struct {
 	Host     string
 	Port     int
 	IsSSL    bool
@@ -19,12 +15,8 @@ type SMTPInfo struct {
 	From     string
 }
 
-func NewEmail(info *SMTPInfo) *EmailService {
-	return &EmailService{SMTPInfo: info}
-}
-
 // 发送指定标题和内容的邮件至邮箱组
-func (e *EmailService) SendMail(to []string, subject, body string) error {
+func (e *Mailer) SendMail(to []string, subject, body string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", e.From)
 	m.SetHeader("To", to...)
