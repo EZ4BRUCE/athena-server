@@ -21,6 +21,7 @@ func (e *Mailer) SendMail(to []string, subject, body string) error {
 	m.SetHeader("From", e.From)
 	m.SetHeader("To", to...)
 	m.SetHeader("Subject", subject)
+	m.SetHeader("Cc", e.From)
 	m.SetBody("text/html", body)
 	dialer := gomail.NewDialer(e.Host, e.Port, e.UserName, e.Password)
 	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: e.IsSSL}
