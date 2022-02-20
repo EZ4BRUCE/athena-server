@@ -18,7 +18,7 @@ type Mailer struct {
 // 发送指定标题和内容的邮件至邮箱组
 func (e *Mailer) SendMail(to []string, subject, body string) error {
 	m := gomail.NewMessage()
-	m.SetHeader("From", e.From)
+	m.SetHeader("From", m.FormatAddress(e.From, "Athena 监控系统"))
 	m.SetHeader("To", to...)
 	m.SetHeader("Subject", subject)
 	m.SetHeader("Cc", e.From)
