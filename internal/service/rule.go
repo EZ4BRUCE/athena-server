@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"time"
 
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
@@ -32,6 +33,8 @@ func sendWarningEmail(r *pb.ReportReq, a *Aggregator, result float64, agentDescr
 		r.GetUId(), agentDescription, r.GetTimestamp(), a.Rule.Level, r.GetMetric(), r.GetDimensions(), a.Function.Type, a.Function.Description, result)
 	for i := 0; i < 3; i++ {
 		err := mailer.SendMail(global.EmailSetting.To, subject, body)
+		// 发送一次sleep一秒，防止一秒内大量发送被禁止
+		time.Sleep(time.Second)
 		if err != nil {
 			global.Logger.Errorf("[邮件错误] 第 %d 次发送邮件失败！mailer.SendMail err:%s", i+1, err)
 		} else {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"time"
 
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"github.com/EZ4BRUCE/athena-server/global"
@@ -15,12 +16,15 @@ func sendLoginEmail(r *pb.RegisterReq, uId string) {
 	// 邮件尝试发送3次，不行就不发了
 	for i := 0; i < 3; i++ {
 		err := mailer.SendMail(global.EmailSetting.To, subject, body)
+		// 发送一次sleep一秒，防止一秒内大量发送被禁止
+		time.Sleep(time.Second)
 		if err != nil {
 			global.Logger.Errorf("[邮件错误] 第 %d 次发送邮件失败！mailer.SendMail err:%s", i+1, err)
 		} else {
 			global.Logger.Infof("<EMAIL操作成功> 新注册 Agent:%s 邮件已发送", uId)
 			break
 		}
+
 	}
 	global.PutMailer(mailer)
 
@@ -33,6 +37,8 @@ func sendOfflineEmail(agent *Agent) {
 	body := fmt.Sprintf("异常主机Uid: %s\t，已%d秒未收到其上报信息", agent.UId, agent.CheckAliveTime*2)
 	for i := 0; i < 3; i++ {
 		err := mailer.SendMail(global.EmailSetting.To, subject, body)
+		// 发送一次sleep一秒，防止一秒内大量发送被禁止
+		time.Sleep(time.Second)
 		if err != nil {
 			global.Logger.Errorf("[邮件错误] 第 %d 次发送邮件失败！mailer.SendMail err:%s", i+1, err)
 		} else {
