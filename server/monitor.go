@@ -58,6 +58,7 @@ func monitor(metricChan chan *pb.ReportReq, aggregationTime int32) {
 	}
 }
 
+// 聚合操作函数
 func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 	// 规则服务，用于从规则数据库中读取规则
 	ruleSvc := service.NewRuleService(context.Background())

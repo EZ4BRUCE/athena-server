@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// 创建Zap Logger
 func NewLogger(loggerSetting *setting.LOGSettingS) *zap.SugaredLogger {
 	writeSyncer := zapcore.NewMultiWriteSyncer(
 		zapcore.AddSync(os.Stdout),
@@ -20,6 +21,7 @@ func NewLogger(loggerSetting *setting.LOGSettingS) *zap.SugaredLogger {
 	return logger.Sugar()
 }
 
+// 获取编码器
 func getEncoder() zapcore.Encoder {
 	// return zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
 	encoderConfig := zap.NewProductionEncoderConfig()
@@ -28,6 +30,7 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
+// 设置lumberjack的io writer
 func getLogWriter(loggerSetting *setting.LOGSettingS) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   loggerSetting.LogSavePath + loggerSetting.LogFileName + loggerSetting.LogFileExt,
