@@ -1,6 +1,8 @@
 package server
 
 import (
+	"sync"
+
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 )
 
@@ -16,5 +18,5 @@ type Agent struct {
 }
 
 var (
-	RegisterMap map[string]*Agent // RegisterMap记录每个已注册的主机
+	RegisterMap sync.Map // RegisterMap记录每个已注册的主机
 )

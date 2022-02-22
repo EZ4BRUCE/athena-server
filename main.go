@@ -24,7 +24,6 @@ func init() {
 		panic(err)
 	}
 	setupLogger()
-	setupServer()
 	err = setupDBEngine()
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)
@@ -107,14 +106,6 @@ func setupLogger() {
 	global.Logger = logger.NewLogger(global.LOGSetting)
 	if global.Logger == nil {
 		panic("logger is not initialized")
-	}
-}
-
-// 初始化 gRPC 服务需要的变量
-func setupServer() {
-	server.RegisterMap = make(map[string]*server.Agent, global.RPCSetting.MaxConn)
-	if server.RegisterMap == nil {
-		panic("server.RegisterMap is not initialized")
 	}
 }
 

@@ -33,7 +33,7 @@ func release(agent *Agent) {
 		// 遍历每一个指标的channel将其关闭，关闭过后对应的monitor协程会退出
 		close(agent.MetricMap[k])
 	}
-	delete(RegisterMap, agent.UId)
+	RegisterMap.Delete(agent.UId)
 }
 
 // 监控单个指标对应的channel
@@ -43,7 +43,9 @@ func monitor(metricChan chan *pb.ReportReq, aggregationTime int32) {
 	var list []*pb.ReportReq
 	for report := range metricChan {
 		// 每次收到该agent上报，证明其连接正常，将检测变量设为true
-		RegisterMap[report.GetUId()].CheckAliveStatus = true
+		agentInteface, _ := RegisterMap.Load(report.GetUId())
+		agent := agentInteface.(*Agent)
+		agent.CheckAliveStatus = true
 		list = append(list, report)
 		// 更新聚合计数器
 		counter--
@@ -71,16 +73,19 @@ func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 		global.Logger.Errorf("[规则载入错误] ruleSvc.SearchAggregators err:%s", err)
 		return
 	}
+	agentInteface, _ := RegisterMap.Load(report.GetUId())
+	agent := agentInteface.(*Agent)
+
 	// 对该指标的每个聚合器进行告警判断
 	for _, aggregator := range aggregators {
 		result, danger := ruleSvc.ExecuteFunc(aggregator.Function, list)
 		if danger {
 			// 系统异常，需要告警
 			safe = false
-			global.Logger.Infof("[监控异常] Timestamp:%v 主机%s(%s)  指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), RegisterMap[report.GetUId()].UId, RegisterMap[report.GetUId()].Description, aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
+			global.Logger.Infof("[监控异常] Timestamp:%v 主机%s(%s)  指标 %s 出现异常，%s 型函数聚合值为 %v 告警等级为 %s ，需要执行 %s 动作\n", report.GetTimestamp(), agent.UId, agent.Description, aggregator.Metric, aggregator.Function.Type, result, aggregator.Rule.Level, aggregator.Rule.Action)
 			// 执行告警动作(发邮件)可以开一个协程去做，不需要阻塞
 			// go ruleSvc.ExecuteRule(report, &aggregator, result)
-			ruleSvc.ExecuteRule(report, &aggregator, result, RegisterMap[report.GetUId()].Description)
+			ruleSvc.ExecuteRule(report, &aggregator, result, agent.Description)
 			err = reportSvc.CreateWarningEvent(list, aggregator.Id, aggregator.Name, aggregator.Metric, aggregator.Function, aggregator.Rule, result)
 			if err != nil {
 				global.Logger.Errorf("[数据库错误] reportSvc.CreateWarningEvent err:%s", err)
@@ -89,7 +94,7 @@ func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 	}
 	if safe {
 		// 系统正常
-		global.Logger.Infof("[监控正常] Timestamp:%v 主机%s(%s) 指标 %s 正常，无需告警\n", report.GetTimestamp(), RegisterMap[report.GetUId()].UId, RegisterMap[report.GetUId()].Description, report.GetMetric())
+		global.Logger.Infof("[监控正常] Timestamp:%v 主机%s(%s) 指标 %s 正常，无需告警\n", report.GetTimestamp(), agent.UId, agent.Description, report.GetMetric())
 		// 保存聚合事件
 		err = reportSvc.CreateNormalEvent(list)
 		if err != nil {
