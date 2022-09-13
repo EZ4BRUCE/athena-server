@@ -50,7 +50,7 @@ func monitor(agent *Agent, metricChan chan *pb.ReportReq, aggregationTime int32)
 		counter--
 		if counter == 0 {
 			// 执行一次聚合操作
-			go doAggregation(list, report)
+			go doAggregation(agent, list, report)
 			// 清空list
 			list = make([]*pb.ReportReq, global.RPCSetting.AggregationTime)
 			// 计数器设置回初值
@@ -60,7 +60,7 @@ func monitor(agent *Agent, metricChan chan *pb.ReportReq, aggregationTime int32)
 }
 
 // 聚合操作函数
-func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
+func doAggregation(agent *Agent, list []*pb.ReportReq, report *pb.ReportReq) {
 	// 规则服务，用于从规则数据库中读取规则
 	ruleSvc := service.NewRuleService(context.Background())
 	// 告警服务，用于保存聚合信息以及执行告警动作
@@ -72,8 +72,6 @@ func doAggregation(list []*pb.ReportReq, report *pb.ReportReq) {
 		global.Logger.Errorf("[规则载入错误] ruleSvc.SearchAggregators err:%s", err)
 		return
 	}
-	agentInteface, _ := RegisterMap.Load(report.GetUId())
-	agent := agentInteface.(*Agent)
 
 	// 对该指标的每个聚合器进行告警判断
 	for _, aggregator := range aggregators {
