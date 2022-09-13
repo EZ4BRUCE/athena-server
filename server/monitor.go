@@ -44,8 +44,6 @@ func monitor(agent *Agent, metricChan chan *pb.ReportReq, aggregationTime int32)
 	var list []*pb.ReportReq
 	for report := range metricChan {
 		// 每次收到该agent上报，证明其连接正常，将检测变量设为true
-		agentInteface, _ := RegisterMap.Load(report.GetUId())
-		agent := agentInteface.(*Agent)
 		agent.CheckAliveStatus = true
 		list = append(list, report)
 		// 更新聚合计数器
