@@ -49,7 +49,7 @@ func (s *ReportServerServer) Register(ctx context.Context, r *pb.RegisterReq) (*
 	for _, metric := range r.Metrics {
 		newAgent.MetricMap[metric] = make(chan *pb.ReportReq, global.RPCSetting.AggregationTime*2)
 		// 对每一个指标channel使用一个协程监控并处理
-		go monitor(newAgent.MetricMap[metric], newAgent.AggregationTime)
+		go monitor(newAgent, newAgent.MetricMap[metric], newAgent.AggregationTime)
 	}
 	// 发送新增主机通知邮件
 	go sendLoginEmail(r, uId)

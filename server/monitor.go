@@ -37,7 +37,8 @@ func release(agent *Agent) {
 }
 
 // 监控单个指标对应的channel
-func monitor(metricChan chan *pb.ReportReq, aggregationTime int32) {
+// 这里应该要传入一个agent，这样不用每次都去读sync.Map
+func monitor(agent *Agent, metricChan chan *pb.ReportReq, aggregationTime int32) {
 	// 聚合计数器，每当收到的report到达聚合时间的数目即需要进行聚合
 	counter := aggregationTime
 	var list []*pb.ReportReq
