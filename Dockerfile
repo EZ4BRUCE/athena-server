@@ -1,8 +1,8 @@
-FROM golang:alpine
+FROM golang:1.17.13
 
 LABEL MAINTAINER="EZ4BRUCE@lhy122786302@gmail.com"
 
-# 为我们的镜像设置必要的环境变量
+# 为镜像设置必要的环境变量
 ENV GO111MODULE=on \
     GOPROXY=https://goproxy.cn,direct
 
@@ -30,6 +30,6 @@ WORKDIR /go/src/athena-server
 # 把/go/src/gin-vue-admin整个文件夹的文件到当前工作目录
 COPY --from=0 /go/src/athena-server ./
 
-EXPOSE 8888
+EXPOSE 8880
 
 ENTRYPOINT ./athena-server 
