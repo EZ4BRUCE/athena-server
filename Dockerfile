@@ -1,4 +1,4 @@
-FROM golang:1.17.13
+FROM golang:1.17.13-alpine
 
 LABEL MAINTAINER="EZ4BRUCE@lhy122786302@gmail.com"
 
